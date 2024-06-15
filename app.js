@@ -1,13 +1,10 @@
-const http = require("http");
-const { escape } = require("querystring");
-path = require("path");
-express = require("express");
-
-bodyParser = require("body-parser");
-const sqlite3 = require("sqlite3");
+const sqlite3 = require("sqlite3").verbose();
+const http = require("http"),
+  path = require("path"),
+  express = require("express"),
+  bodyParser = require("body-parser");
 
 const app = express();
-
 app.use(express.static("."));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -25,9 +22,9 @@ app.get("/", function (req, res) {
 });
 
 app.post("/login", function (req, res) {
-  const username = req.body.username;
-  const password = req.body.password;
-  const query =
+  var username = req.body.username;
+  var password = req.body.password;
+  var query =
     "SELECT title FROM user where username = '" +
     username +
     "' and password = '" +
@@ -40,7 +37,7 @@ app.post("/login", function (req, res) {
 
   db.get(query, function (err, row) {
     if (err) {
-      console.log("ERROR, err");
+      console.log("ERROR", err);
       res.redirect("/index.html#error");
     } else if (!row) {
       res.redirect("/index.html#unauthorized");
